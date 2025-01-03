@@ -6,8 +6,7 @@ blueprint:
   input:
     notification_target:
       name: Notification Target
-      description: Select the target for notifications.
-      default: false
+      description: "Select the notification target (e.g., mobile device)."
       selector:
         device:
           integration: mobile_app
@@ -459,413 +458,290 @@ blueprint:
 
 trigger:
   # Temperature triggers
-  - platform: numeric_state
-    entity_id: !input temperature_sensor
-    above: !input max_temp
-    for:
-      minutes: 1
+  - platform: template
+    value_template: >
+      {{ not is_state('!input temperature_sensor', 'unavailable') and 
+         not is_state('!input temperature_sensor', 'None') and 
+         states('!input temperature_sensor') | float > !input max_temp }}
     id: "temperature_high"
-  - platform: numeric_state
-    entity_id: !input temperature_sensor
-    below: !input min_temp
-    for:
-      minutes: 1
+  - platform: template
+    value_template: >
+      {{ not is_state('!input temperature_sensor', 'unavailable') and 
+         not is_state('!input temperature_sensor', 'None') and 
+         states('!input temperature_sensor') | float < !input min_temp }}
     id: "temperature_low"
 
   # Humidity triggers
-  - platform: numeric_state
-    entity_id: !input humidity_sensor
-    above: !input max_humidity
-    for:
-      minutes: 1
+  - platform: template
+    value_template: >
+      {{ not is_state('!input humidity_sensor', 'unavailable') and 
+         not is_state('!input humidity_sensor', 'None') and 
+         states('!input humidity_sensor') | float > !input max_humidity }}
     id: "humidity_high"
-  - platform: numeric_state
-    entity_id: !input humidity_sensor
-    below: !input min_humidity
-    for:
-      minutes: 1
+  - platform: template
+    value_template: >
+      {{ not is_state('!input humidity_sensor', 'unavailable') and 
+         not is_state('!input humidity_sensor', 'None') and 
+         states('!input humidity_sensor') | float < !input min_humidity }}
     id: "humidity_low"
 
   # Pressure triggers
-  - platform: numeric_state
-    entity_id: !input pressure_sensor
-    above: !input max_pressure
-    for:
-      minutes: 1
+  - platform: template
+    value_template: >
+      {{ not is_state('!input pressure_sensor', 'unavailable') and 
+         not is_state('!input pressure_sensor', 'None') and 
+         states('!input pressure_sensor') | float > !input max_pressure }}
     id: "pressure_high"
-  - platform: numeric_state
-    entity_id: !input pressure_sensor
-    below: !input min_pressure
-    for:
-      minutes: 1
+  - platform: template
+    value_template: >
+      {{ not is_state('!input pressure_sensor', 'unavailable') and 
+         not is_state('!input pressure_sensor', 'None') and 
+         states('!input pressure_sensor') | float < !input min_pressure }}
     id: "pressure_low"
 
   # PM1 triggers
-  - platform: numeric_state
-    entity_id: !input pm1_sensor
-    above: !input max_pm1
-    for:
-      minutes: 1
+  - platform: template
+    value_template: >
+      {{ not is_state('!input pm1_sensor', 'unavailable') and 
+         not is_state('!input pm1_sensor', 'None') and 
+         states('!input pm1_sensor') | float > !input max_pm1 }}
     id: "pm1_high"
 
   # PM2.5 triggers
-  - platform: numeric_state
-    entity_id: !input pm25_sensor
-    above: !input max_pm25
-    for:
-      minutes: 1
+  - platform: template
+    value_template: >
+      {{ not is_state('!input pm25_sensor', 'unavailable') and 
+         not is_state('!input pm25_sensor', 'None') and 
+         states('!input pm25_sensor') | float > !input max_pm25 }}
     id: "pm25_high"
 
   # PM4 triggers
-  - platform: numeric_state
-    entity_id: !input pm4_sensor
-    above: !input max_pm4
-    for:
-      minutes: 1
+  - platform: template
+    value_template: >
+      {{ not is_state('!input pm4_sensor', 'unavailable') and 
+         not is_state('!input pm4_sensor', 'None') and 
+         states('!input pm4_sensor') | float > !input max_pm4 }}
     id: "pm4_high"
 
   # PM10 triggers
-  - platform: numeric_state
-    entity_id: !input pm10_sensor
-    above: !input max_pm10
-    for:
-      minutes: 1
+  - platform: template
+    value_template: >
+      {{ not is_state('!input pm10_sensor', 'unavailable') and 
+         not is_state('!input pm10_sensor', 'None') and 
+         states('!input pm10_sensor') | float > !input max_pm10 }}
     id: "pm10_high"
 
   # VOC triggers
-  - platform: numeric_state
-    entity_id: !input voc_sensor
-    above: !input max_voc
-    for:
-      minutes: 1
+  - platform: template
+    value_template: >
+      {{ not is_state('!input voc_sensor', 'unavailable') and 
+         not is_state('!input voc_sensor', 'None') and 
+         states('!input voc_sensor') | float > !input max_voc }}
     id: "voc_high"
 
   # NOx triggers
-  - platform: numeric_state
-    entity_id: !input nox_sensor
-    above: !input max_nox
-    for:
-      minutes: 1
+  - platform: template
+    value_template: >
+      {{ not is_state('!input nox_sensor', 'unavailable') and 
+         not is_state('!input nox_sensor', 'None') and 
+         states('!input nox_sensor') | float > !input max_nox }}
     id: "nox_high"
 
   # CO2 triggers
-  - platform: numeric_state
-    entity_id: !input co2_sensor
-    above: !input max_co2
-    for:
-      minutes: 1
+  - platform: template
+    value_template: >
+      {{ not is_state('!input co2_sensor', 'unavailable') and 
+         not is_state('!input co2_sensor', 'None') and 
+         states('!input co2_sensor') | float > !input max_co2 }}
     id: "co2_high"
 
   # CO triggers
-  - platform: numeric_state
-    entity_id: !input co_sensor
-    above: !input max_co
-    for:
-      minutes: 1
+  - platform: template
+    value_template: >
+      {{ not is_state('!input co_sensor', 'unavailable') and 
+         not is_state('!input co_sensor', 'None') and 
+         states('!input co_sensor') | float > !input max_co }}
     id: "co_high"
 
   # Ethanol triggers
-  - platform: numeric_state
-    entity_id: !input ethanol_sensor
-    above: !input max_ethanol
-    for:
-      minutes: 1
+  - platform: template
+    value_template: >
+      {{ not is_state('!input ethanol_sensor', 'unavailable') and 
+         not is_state('!input ethanol_sensor', 'None') and 
+         states('!input ethanol_sensor') | float > !input max_ethanol }}
     id: "ethanol_high"
 
   # Hydrogen triggers
-  - platform: numeric_state
-    entity_id: !input hydrogen_sensor
-    above: !input max_hydrogen
-    for:
-      minutes: 1
+  - platform: template
+    value_template: >
+      {{ not is_state('!input hydrogen_sensor', 'unavailable') and 
+         not is_state('!input hydrogen_sensor', 'None') and 
+         states('!input hydrogen_sensor') | float > !input max_hydrogen }}
     id: "hydrogen_high"
 
   # NO2 triggers
-  - platform: numeric_state
-    entity_id: !input no2_sensor
-    above: !input max_no2
-    for:
-      minutes: 1
+  - platform: template
+    value_template: >
+      {{ not is_state('!input no2_sensor', 'unavailable') and 
+         not is_state('!input no2_sensor', 'None') and 
+         states('!input no2_sensor') | float > !input max_no2 }}
     id: "no2_high"
 
   # Ammonia triggers
-  - platform: numeric_state
-    entity_id: !input ammonia_sensor
-    above: !input max_ammonia
-    for:
-      minutes: 1
+  - platform: template
+    value_template: >
+      {{ not is_state('!input ammonia_sensor', 'unavailable') and 
+         not is_state('!input ammonia_sensor', 'None') and 
+         states('!input ammonia_sensor') | float > !input max_ammonia }}
     id: "ammonia_high"
 
   # Methane triggers
-  - platform: numeric_state
-    entity_id: !input methane_sensor
-    above: !input max_methane
-    for:
-      minutes: 1
+  - platform: template
+    value_template: >
+      {{ not is_state('!input methane_sensor', 'unavailable') and 
+         not is_state('!input methane_sensor', 'None') and 
+         states('!input methane_sensor') | float > !input max_methane }}
     id: "methane_high"
 
   # Bluetooth triggers
-  - platform: numeric_state
-    entity_id: !input bluetooth_sensor
-    above: !input max_bluetooth
-    for:
-      minutes: 1
+  - platform: template
+    value_template: >
+      {{ not is_state('!input bluetooth_sensor', 'unavailable') and 
+         not is_state('!input bluetooth_sensor', 'None') and 
+         states('!input bluetooth_sensor') | float > !input max_bluetooth }}
     id: "bluetooth_high"
 
   # AQI triggers
-  - platform: numeric_state
-    entity_id: !input aqi_sensor
-    above: !input max_aqi
-    for:
-      minutes: 1
+  - platform: template
+    value_template: >
+      {{ not is_state('!input aqi_sensor', 'unavailable') and 
+         not is_state('!input aqi_sensor', 'None') and 
+         states('!input aqi_sensor') | float > !input max_aqi }}
     id: "aqi_high"
 
 action:
+  - variables:
+      temperature_sensor: !input temperature_sensor
+      humidity_sensor: !input humidity_sensor
+      pressure_sensor: !input pressure_sensor
+      pm1_sensor: !input pm1_sensor
+      pm25_sensor: !input pm25_sensor
+      pm4_sensor: !input pm4_sensor
+      pm10_sensor: !input pm10_sensor
+      voc_sensor: !input voc_sensor
+      nox_sensor: !input nox_sensor
+      co2_sensor: !input co2_sensor
+      co_sensor: !input co_sensor
+      ethanol_sensor: !input ethanol_sensor
+      hydrogen_sensor: !input hydrogen_sensor
+      no2_sensor: !input no2_sensor
+      ammonia_sensor: !input ammonia_sensor
+      methane_sensor: !input methane_sensor
+      bluetooth_sensor: !input bluetooth_sensor
+      aqi_sensor: !input aqi_sensor
+
   - choose:
-      # Temperature actions
-      - conditions:
-          - condition: trigger
-            id: "temperature_high"
-        sequence:
-          - service: notify.mobile_app
-            data:
-              title: "Temperature Alert"
-              message: "The temperature is too high! Current value: {{ states(trigger.entity_id) }}°C."
-              data:
-                icon: mdi:thermometer
-      - conditions:
-          - condition: trigger
-            id: "temperature_low"
-        sequence:
-          - service: notify.mobile_app
-            data:
-              title: "Temperature Alert"
-              message: "The temperature is too low! Current value: {{ states(trigger.entity_id) }}°C."
-              data:
-                icon: mdi:thermometer
-
-      # Humidity actions
-      - conditions:
-          - condition: trigger
-            id: "humidity_high"
-        sequence:
-          - service: notify.mobile_app
-            data:
-              title: "Humidity Alert"
-              message: "The humidity is too high! Current value: {{ states(trigger.entity_id) }}%."
-              data:
-                icon: mdi:water-percent
-      - conditions:
-          - condition: trigger
-            id: "humidity_low"
-        sequence:
-          - service: notify.mobile_app
-            data:
-              title: "Humidity Alert"
-              message: "The humidity is too low! Current value: {{ states(trigger.entity_id) }}%."
-              data:
-                icon: mdi:water-percent
-
-      # Pressure actions
-      - conditions:
-          - condition: trigger
-            id: "pressure_high"
-        sequence:
-          - service: notify.mobile_app
-            data:
-              title: "Pressure Alert"
-              message: "The pressure is too high! Current value: {{ states(trigger.entity_id) }} hPa."
-              data:
-                icon: mdi:gauge
-      - conditions:
-          - condition: trigger
-            id: "pressure_low"
-        sequence:
-          - service: notify.mobile_app
-            data:
-              title: "Pressure Alert"
-              message: "The pressure is too low! Current value: {{ states(trigger.entity_id) }} hPa."
-              data:
-                icon: mdi:gauge
-
-      # PM1 actions
-      - conditions:
-          - condition: trigger
-            id: "pm1_high"
-        sequence:
-          - service: notify.mobile_app
-            data:
-              title: "PM1 Alert"
-              message: "PM1 levels are too high! Current value: {{ states(trigger.entity_id) }} µg/m³."
-              data:
-                icon: mdi:weather-fog
-
-      # PM2.5 actions
-      - conditions:
-          - condition: trigger
-            id: "pm25_high"
-        sequence:
-          - service: notify.mobile_app
-            data:
-              title: "PM2.5 Alert"
-              message: "PM2.5 levels are too high! Current value: {{ states(trigger.entity_id) }} µg/m³."
-              data:
-                icon: mdi:weather-fog
-
-      # PM4 actions
-      - conditions:
-          - condition: trigger
-            id: "pm4_high"
-        sequence:
-          - service: notify.mobile_app
-            data:
-              title: "PM4 Alert"
-              message: "PM4 levels are too high! Current value: {{ states(trigger.entity_id) }} µg/m³."
-              data:
-                icon: mdi:weather-fog
-
-      # PM10 actions
-      - conditions:
-          - condition: trigger
-            id: "pm10_high"
-        sequence:
-          - service: notify.mobile_app
-            data:
-              title: "PM10 Alert"
-              message: "PM10 levels are too high! Current value: {{ states(trigger.entity_id) }} µg/m³."
-              data:
-                icon: mdi:weather-fog
-
-      # VOC actions
-      - conditions:
-          - condition: trigger
-            id: "voc_high"
-        sequence:
-          - service: notify.mobile_app
-            data:
-              title: "VOC Alert"
-              message: "VOC levels are too high! Current value: {{ states(trigger.entity_id) }} ppb."
-              data:
-                icon: mdi:chemical-weapon
-
-      # NOx actions
-      - conditions:
-          - condition: trigger
-            id: "nox_high"
-        sequence:
-          - service: notify.mobile_app
-            data:
-              title: "NOx Alert"
-              message: "NOx levels are too high! Current value: {{ states(trigger.entity_id) }} ppb."
-              data:
-                icon: mdi:weather-lightning
-
-      # CO2 actions
-      - conditions:
-          - condition: trigger
-            id: "co2_high"
-        sequence:
-          - service: notify.mobile_app
-            data:
-              title: "CO2 Alert"
-              message: "CO2 levels are too high! Current value: {{ states(trigger.entity_id) }} ppm."
-              data:
-                icon: mdi:molecule-co2
-
-      # CO actions
-      - conditions:
-          - condition: trigger
-            id: "co_high"
-        sequence:
-          - service: notify.mobile_app
-            data:
-              title: "CO Alert"
-              message: "CO levels are too high! Current value: {{ states(trigger.entity_id) }} ppm."
-              data:
-                icon: mdi:molecule-co
-
       # Ethanol actions
       - conditions:
-          - condition: trigger
-            id: "ethanol_high"
+          - condition: template
+            value_template: >
+              {{ trigger.id == "ethanol_high" and
+                 states(ethanol_sensor) not in ['unavailable', 'unknown', 'None'] }}
         sequence:
-          - service: notify.mobile_app
+          - service: notify.notify
             data:
               title: "Ethanol Alert"
-              message: "Ethanol levels are too high! Current value: {{ states(trigger.entity_id) }} ppb."
+              message: >
+                Ethanol levels are too high! Current value: {{ states(ethanol_sensor) }} ppb.
               data:
-                icon: mdi:glass-wine
+                notification_icon: mdi:glass-wine
 
       # Hydrogen actions
       - conditions:
-          - condition: trigger
-            id: "hydrogen_high"
+          - condition: template
+            value_template: >
+              {{ trigger.id == "hydrogen_high" and
+                 states(hydrogen_sensor) not in ['unavailable', 'unknown', 'None'] }}
         sequence:
-          - service: notify.mobile_app
+          - service: notify.notify
             data:
               title: "Hydrogen Alert"
-              message: "Hydrogen levels are too high! Current value: {{ states(trigger.entity_id) }} ppm."
+              message: >
+                Hydrogen levels are too high! Current value: {{ states(hydrogen_sensor) }} ppm.
               data:
-                icon: mdi:gas-cylinder
+                notification_icon: mdi:gas-cylinder
 
       # NO2 actions
       - conditions:
-          - condition: trigger
-            id: "no2_high"
+          - condition: template
+            value_template: >
+              {{ trigger.id == "no2_high" and
+                 states(no2_sensor) not in ['unavailable', 'unknown', 'None'] }}
         sequence:
-          - service: notify.mobile_app
+          - service: notify.notify
             data:
               title: "NO2 Alert"
-              message: "NO2 levels are too high! Current value: {{ states(trigger.entity_id) }} ppb."
+              message: >
+                NO2 levels are too high! Current value: {{ states(no2_sensor) }} ppb.
               data:
-                icon: mdi:gas-cylinder
+                notification_icon: mdi:gas-cylinder
 
       # Ammonia actions
       - conditions:
-          - condition: trigger
-            id: "ammonia_high"
+          - condition: template
+            value_template: >
+              {{ trigger.id == "ammonia_high" and
+                 states(ammonia_sensor) not in ['unavailable', 'unknown', 'None'] }}
         sequence:
-          - service: notify.mobile_app
+          - service: notify.notify
             data:
               title: "Ammonia Alert"
-              message: "Ammonia levels are too high! Current value: {{ states(trigger.entity_id) }} ppm."
+              message: >
+                Ammonia levels are too high! Current value: {{ states(ammonia_sensor) }} ppm.
               data:
-                icon: mdi:chemical-weapon
+                notification_icon: mdi:chemical-weapon
 
       # Methane actions
       - conditions:
-          - condition: trigger
-            id: "methane_high"
+          - condition: template
+            value_template: >
+              {{ trigger.id == "methane_high" and
+                 states(methane_sensor) not in ['unavailable', 'unknown', 'None'] }}
         sequence:
-          - service: notify.mobile_app
+          - service: notify.notify
             data:
               title: "Methane Alert"
-              message: "Methane levels are too high! Current value: {{ states(trigger.entity_id) }} ppm."
+              message: >
+                Methane levels are too high! Current value: {{ states(methane_sensor) }} ppm.
               data:
-                icon: mdi:chemical-weapon
+                notification_icon: mdi:chemical-weapon
 
       # Bluetooth actions
       - conditions:
-          - condition: trigger
-            id: "bluetooth_high"
+          - condition: template
+            value_template: >
+              {{ trigger.id == "bluetooth_high" and
+                 states(bluetooth_sensor) not in ['unavailable', 'unknown', 'None'] }}
         sequence:
-          - service: notify.mobile_app
+          - service: notify.notify
             data:
               title: "Bluetooth Devices Alert"
-              message: "Too many Bluetooth devices detected! Current count: {{ states(trigger.entity_id) }}."
+              message: >
+                Too many Bluetooth devices detected! Current count: {{ states(bluetooth_sensor) }}.
               data:
-                icon: mdi:bluetooth
+                notification_icon: mdi:bluetooth
 
       # AQI actions
       - conditions:
-          - condition: trigger
-            id: "aqi_high"
+          - condition: template
+            value_template: >
+              {{ trigger.id == "aqi_high" and
+                 states(aqi_sensor) not in ['unavailable', 'unknown', 'None'] }}
         sequence:
-          - service: notify.mobile_app
+          - service: notify.notify
             data:
               title: "Air Quality Index Alert"
-              message: "Air Quality Index (AQI) is too high! Current value: {{ states(trigger.entity_id) }}."
+              message: >
+                Air Quality Index (AQI) is too high! Current value: {{ states(aqi_sensor) }}.
               data:
-                icon: mdi:air-filter
-
-    default: []
+                notification_icon: mdi:air-filter
