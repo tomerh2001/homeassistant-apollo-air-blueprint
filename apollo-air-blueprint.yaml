@@ -4,6 +4,20 @@ blueprint:
     This blueprint monitors values from Apollo Air sensors and sends a notification if any values exceed the defined thresholds.
   domain: automation
   input:
+    area_name:
+      name: Area Name
+      description: "Enter which area of the house the sensor is located at (this will be used in the notification)."
+      selector:
+        text: {}
+
+    notify_device:
+      name: Notify Device
+      description: "Select the device to send the notification to."
+      selector:
+        device:
+          integration: mobile_app
+          multiple: false
+
     temperature_settings:
       name: Temperature
       icon: mdi:thermometer
@@ -37,10 +51,426 @@ blueprint:
               max: 50
               unit_of_measurement: °C
 
+    humidity_settings:
+      name: Humidity
+      icon: mdi:water-percent
+      collapsed: true
+      input:
+        humidity_sensor:
+          name: Humidity Sensor
+          description: "Select the humidity sensor."
+          default: null
+          selector:
+            entity:
+              integration: esphome
+              domain: sensor
+              device_class: humidity
+        min_humidity:
+          name: Minimum Humidity
+          description: "Set the minimum acceptable humidity (%)."
+          default: 30
+          selector:
+            number:
+              min: 0
+              max: 100
+              unit_of_measurement: "%"
+        max_humidity:
+          name: Maximum Humidity
+          description: "Set the maximum acceptable humidity (%)."
+          default: 60
+          selector:
+            number:
+              min: 0
+              max: 100
+              unit_of_measurement: "%"
+
+    pressure_settings:
+      name: Pressure
+      icon: mdi:gauge
+      collapsed: true
+      input:
+        pressure_sensor:
+          name: Pressure Sensor
+          description: "Select the pressure sensor."
+          default: null
+          selector:
+            entity:
+              integration: esphome
+              domain: sensor
+              device_class: pressure
+        min_pressure:
+          name: Minimum Pressure
+          description: "Set the minimum acceptable pressure (hPa)."
+          default: 980
+          selector:
+            number:
+              min: 800
+              max: 1200
+              unit_of_measurement: hPa
+        max_pressure:
+          name: Maximum Pressure
+          description: "Set the maximum acceptable pressure (hPa)."
+          default: 1050
+          selector:
+            number:
+              min: 800
+              max: 1200
+              unit_of_measurement: hPa
+
+    pm1_settings:
+      name: PM1
+      icon: mdi:weather-fog
+      collapsed: true
+      input:
+        pm1_sensor:
+          name: PM1 Sensor
+          description: "Select the PM1 sensor."
+          default: null
+          selector:
+            entity:
+              integration: esphome
+              domain: sensor
+        max_pm1:
+          name: Maximum PM1
+          description: "Set the maximum acceptable PM1 level (µg/m³)."
+          default: 10
+          selector:
+            number:
+              min: 0
+              max: 500
+              unit_of_measurement: µg/m³
+
+    pm25_settings:
+      name: PM2.5
+      icon: mdi:weather-fog
+      collapsed: true
+      input:
+        pm25_sensor:
+          name: PM2.5 Sensor
+          description: "Select the PM2.5 sensor."
+          default: null
+          selector:
+            entity:
+              integration: esphome
+              domain: sensor
+        max_pm25:
+          name: Maximum PM2.5
+          description: "Set the maximum acceptable PM2.5 level (µg/m³)."
+          default: 25
+          selector:
+            number:
+              min: 0
+              max: 500
+              unit_of_measurement: µg/m³
+
+    pm4_settings:
+      name: PM4
+      icon: mdi:weather-fog
+      collapsed: true
+      input:
+        pm4_sensor:
+          name: PM4 Sensor
+          description: "Select the PM4 sensor."
+          default: null
+          selector:
+            entity:
+              integration: esphome
+              domain: sensor
+        max_pm4:
+          name: Maximum PM4
+          description: "Set the maximum acceptable PM4 level (µg/m³)."
+          default: 40
+          selector:
+            number:
+              min: 0
+              max: 500
+              unit_of_measurement: µg/m³
+
+    pm10_settings:
+      name: PM10
+      icon: mdi:weather-fog
+      collapsed: true
+      input:
+        pm10_sensor:
+          name: PM10 Sensor
+          description: "Select the PM10 sensor."
+          default: null
+          selector:
+            entity:
+              integration: esphome
+              domain: sensor
+        max_pm10:
+          name: Maximum PM10
+          description: "Set the maximum acceptable PM10 level (µg/m³)."
+          default: 50
+          selector:
+            number:
+              min: 0
+              max: 500
+              unit_of_measurement: µg/m³
+
+    voc_settings:
+      name: VOC
+      icon: mdi:chemical-weapon
+      collapsed: true
+      input:
+        voc_sensor:
+          name: VOC Sensor
+          description: "Select the VOC sensor."
+          default: null
+          selector:
+            entity:
+              integration: esphome
+              domain: sensor
+        max_voc:
+          name: Maximum VOC
+          description: "Set the maximum acceptable VOC level (ppb)."
+          default: 400
+          selector:
+            number:
+              min: 0
+              max: 1000
+              unit_of_measurement: ppb
+
+    nox_settings:
+      name: NOx
+      icon: mdi:weather-lightning
+      collapsed: true
+      input:
+        nox_sensor:
+          name: NOx Sensor
+          description: "Select the NOx sensor."
+          default: null
+          selector:
+            entity:
+              integration: esphome
+              domain: sensor
+        max_nox:
+          name: Maximum NOx
+          description: "Set the maximum acceptable NOx level (ppb)."
+          default: 30
+          selector:
+            number:
+              min: 0
+              max: 100
+              unit_of_measurement: ppb
+
+    co2_settings:
+      name: CO2
+      icon: mdi:molecule-co2
+      collapsed: true
+      input:
+        co2_sensor:
+          name: CO2 Sensor
+          description: "Select the CO2 sensor."
+          default: null
+          selector:
+            entity:
+              integration: esphome
+              domain: sensor
+              device_class: carbon_dioxide
+        max_co2:
+          name: Maximum CO2
+          description: "Set the maximum acceptable CO2 level (ppm)."
+          default: 1000
+          selector:
+            number:
+              min: 0
+              max: 5000
+              unit_of_measurement: ppm
+
+    co_settings:
+      name: CO
+      icon: mdi:molecule-co
+      collapsed: true
+      input:
+        co_sensor:
+          name: CO Sensor
+          description: "Select the CO sensor."
+          default: null
+          selector:
+            entity:
+              integration: esphome
+              domain: sensor
+              device_class: carbon_monoxide
+        max_co:
+          name: Maximum CO
+          description: "Set the maximum acceptable CO level (ppm)."
+          default: 10
+          selector:
+            number:
+              min: 0
+              max: 100
+              unit_of_measurement: ppm
+
+    ethanol_settings:
+      name: Ethanol
+      icon: mdi:glass-wine
+      collapsed: true
+      input:
+        ethanol_sensor:
+          name: Ethanol Sensor
+          description: "Select the ethanol sensor."
+          default: null
+          selector:
+            entity:
+              integration: esphome
+              domain: sensor
+        max_ethanol:
+          name: Maximum Ethanol
+          description: "Set the maximum acceptable ethanol level (ppb)."
+          default: 50
+          selector:
+            number:
+              min: 0
+              max: 500
+              unit_of_measurement: ppb
+
+    hydrogen_settings:
+      name: Hydrogen
+      icon: mdi:gas-cylinder
+      collapsed: true
+      input:
+        hydrogen_sensor:
+          name: Hydrogen Sensor
+          description: "Select the hydrogen sensor."
+          default: null
+          selector:
+            entity:
+              integration: esphome
+              domain: sensor
+        max_hydrogen:
+          name: Maximum Hydrogen
+          description: "Set the maximum acceptable hydrogen level (ppm)."
+          default: 1
+          selector:
+            number:
+              min: 0
+              max: 10
+              unit_of_measurement: ppm
+
+    no2_settings:
+      name: NO2
+      icon: mdi:gas-cylinder
+      collapsed: true
+      input:
+        no2_sensor:
+          name: NO2 Sensor
+          description: "Select the NO2 sensor."
+          default: null
+          selector:
+            entity:
+              integration: esphome
+              domain: sensor
+        max_no2:
+          name: Maximum NO2
+          description: "Set the maximum acceptable NO2 level (ppb)."
+          default: 20
+          selector:
+            number:
+              min: 0
+              max: 200
+              unit_of_measurement: ppb
+
+    ammonia_settings:
+      name: Ammonia
+      icon: mdi:chemical-weapon
+      collapsed: true
+      input:
+        ammonia_sensor:
+          name: Ammonia Sensor
+          description: "Select the ammonia sensor."
+          default: null
+          selector:
+            entity:
+              integration: esphome
+              domain: sensor
+        max_ammonia:
+          name: Maximum Ammonia
+          description: "Set the maximum acceptable ammonia level (ppm)."
+          default: 10
+          selector:
+            number:
+              min: 0
+              max: 50
+              unit_of_measurement: ppm
+
+    methane_settings:
+      name: Methane
+      icon: mdi:chemical-weapon
+      collapsed: true
+      input:
+        methane_sensor:
+          name: Methane Sensor
+          description: "Select the methane sensor."
+          default: null
+          selector:
+            entity:
+              integration: esphome
+              domain: sensor
+        max_methane:
+          name: Maximum Methane
+          description: "Set the maximum acceptable methane level (ppm)."
+          default: 10
+          selector:
+            number:
+              min: 0
+              max: 50
+              unit_of_measurement: ppm
+
+    bluetooth_settings:
+      name: Bluetooth Devices
+      icon: mdi:bluetooth
+      collapsed: true
+      input:
+        bluetooth_sensor:
+          name: Bluetooth Sensor
+          description: "Select the Bluetooth sensor."
+          default: null
+          selector:
+            entity:
+              integration: esphome
+              domain: sensor
+        max_bluetooth:
+          name: Maximum Bluetooth Devices
+          description: "Set the maximum number of Bluetooth devices allowed in range."
+          default: 5
+          selector:
+            number:
+              min: 0
+              max: 50
+
+    aqi_settings:
+      name: Air Quality Index
+      icon: mdi:air-filter
+      collapsed: true
+      input:
+        aqi_sensor:
+          name: AQI Sensor
+          description: "Select the AQI sensor."
+          default: null
+          selector:
+            entity:
+              integration: esphome
+              domain: sensor
+        max_aqi:
+          name: Maximum AQI
+          description: "Set the maximum acceptable Air Quality Index value."
+          default: 100
+          selector:
+            number:
+              min: 0
+              max: 500
+
 variables:
+  area_name: !input area_name
+  notify_device: !input notify_device
   temperature_sensor: !input temperature_sensor
   min_temp: !input min_temp
   max_temp: !input max_temp
+  humidity_sensor: !input humidity_sensor
+  min_humidity: !input min_humidity
+  max_humidity: !input max_humidity
 
 trigger:
 - platform: numeric_state
@@ -49,14 +479,63 @@ trigger:
 - platform: numeric_state
   entity_id: !input temperature_sensor
   below: !input min_temp
+- platform: numeric_state
+  entity_id: !input humidity_sensor
+  above: !input max_humidity
+- platform: numeric_state
+  entity_id: !input humidity_sensor
+  below: !input min_humidity
 
 action:
-- service: notify.notify
-  data:
-    title: "Temperature Alert"
-    message: >
-      {% if trigger.above %}
-        The temperature is {{ states(temperature_sensor) }}°C which is above the maximum threshold of {{ max_temp }}°C.
-      {% else %}
-        The temperature is {{ states(temperature_sensor) }}°C which is below the minimum threshold of {{ min_temp }}°C.
-      {% endif %}
+- alias: Max Temperature Alert
+  if:
+  - condition: numeric_state
+    entity_id: !input temperature_sensor
+    above: !input max_temp
+  then:
+  - device_id: !input notify_device
+    domain: mobile_app
+    type: notify
+    title: "{{ area_name }} Temperature Alert"
+    message: "The temperature is {{ states(temperature_sensor) }}°C which is above the maximum of {{ max_temp }}°C."
+    data:
+      notification_icon: "mdi:thermometer"
+- alias: Min Temperature Alert
+  if:
+  - condition: numeric_state
+    entity_id: !input temperature_sensor
+    below: !input min_temp
+  then:
+  - device_id: !input notify_device
+    domain: mobile_app
+    type: notify
+    title: "{{ area_name }} Temperature Alert"
+    message: "The temperature is {{ states(temperature_sensor) }}°C which is below the minimum of {{ min_temp }}°C."
+    data:
+      notification_icon: "mdi:thermometer"
+- alias: Max Humidity Alert
+  if:
+  - condition: numeric_state
+    entity_id: !input humidity_sensor
+    above: !input max_humidity
+  then:
+  - device_id: !input notify_device
+    domain: mobile_app
+    type: notify
+    title: "{{ area_name }} Humidity Alert"
+    message: "The humidity is {{ states(humidity_sensor) }}% which is above the maximum of {{ max_humidity }}%."
+    data:
+      notification_icon: "mdi:water-percent"
+- alias: Min Humidity Alert
+  if:
+  - condition: numeric_state
+    entity_id: !input humidity_sensor
+    below: !input min_humidity
+  then:
+  - device_id: !input notify_device
+    domain: mobile_app
+    type: notify
+    title: "{{ area_name }} Humidity Alert"
+    message: "The humidity is {{ states(humidity_sensor) }}% which is below the minimum of {{ min_humidity }}%."
+    data:
+      notification_icon: "mdi:water-percent"
