@@ -2,7 +2,7 @@
 [![semantic-release](https://img.shields.io/badge/%20%20%F0%9F%93%A6%F0%9F%9A%80-semantic--release-e10079.svg)](https://github.com/semantic-release/semantic-release)
 [![OpenSSF Scorecard](https://api.securityscorecards.dev/projects/github.com/tomerh2001/homeassistant-apollo-air-blueprint/badge)](https://securityscorecards.dev/viewer/?uri=github.com/tomerh2001/homeassistant-apollo-air-blueprint)
 
-This blueprint monitors values from Apollo Air sensors and sends a notification if any values exceed the defined thresholds.
+This blueprint monitors values from [Apollo Air](https://apolloautomation.com/products/air-1) sensors and sends a notification if any values exceed the defined thresholds.
 
 ![Screenshot Jan 4 2025](https://github.com/user-attachments/assets/9589394a-dae8-4faf-8d85-b11067ecd640)
 
