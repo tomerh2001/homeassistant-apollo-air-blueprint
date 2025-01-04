@@ -210,27 +210,27 @@ blueprint:
               max: 500
               unit_of_measurement: µg/m³
 
-  voc_settings:
-    name: VOC
-    icon: mdi:chemical-weapon
-    collapsed: true
-    input:
-      voc_sensor:
-        name: VOC Sensor
-        description: "Select the VOC Index sensor."
-        default: 'sensor.nonexistent_sensor'
-        selector:
-          entity:
-            integration: esphome
-            domain: sensor
-      max_voc:
-        name: Maximum VOC Index
-        description: "Set the maximum acceptable VOC Index value."
-        default: 400
-        selector:
-          number:
-            min: 0
-            max: 500
+    voc_settings:
+      name: VOC
+      icon: mdi:chemical-weapon
+      collapsed: true
+      input:
+        voc_sensor:
+          name: VOC Sensor
+          description: "Select the VOC Index sensor."
+          default: 'sensor.nonexistent_sensor'
+          selector:
+            entity:
+              integration: esphome
+              domain: sensor
+        max_voc:
+          name: Maximum VOC Index
+          description: "Set the maximum acceptable VOC Index value."
+          default: 400
+          selector:
+            number:
+              min: 0
+              max: 500
 
     nox_settings:
       name: NOx
