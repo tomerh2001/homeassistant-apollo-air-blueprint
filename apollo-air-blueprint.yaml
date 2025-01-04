@@ -210,28 +210,27 @@ blueprint:
               max: 500
               unit_of_measurement: µg/m³
 
-    voc_settings:
-      name: VOC
-      icon: mdi:chemical-weapon
-      collapsed: true
-      input:
-        voc_sensor:
-          name: VOC Sensor
-          description: "Select the VOC sensor."
-          default: 'sensor.nonexistent_sensor'
-          selector:
-            entity:
-              integration: esphome
-              domain: sensor
-        max_voc:
-          name: Maximum VOC
-          description: "Set the maximum acceptable VOC level (ppb)."
-          default: 400
-          selector:
-            number:
-              min: 0
-              max: 1000
-              unit_of_measurement: ppb
+  voc_settings:
+    name: VOC
+    icon: mdi:chemical-weapon
+    collapsed: true
+    input:
+      voc_sensor:
+        name: VOC Sensor
+        description: "Select the VOC Index sensor."
+        default: 'sensor.nonexistent_sensor'
+        selector:
+          entity:
+            integration: esphome
+            domain: sensor
+      max_voc:
+        name: Maximum VOC Index
+        description: "Set the maximum acceptable VOC Index value."
+        default: 400
+        selector:
+          number:
+            min: 0
+            max: 500
 
     nox_settings:
       name: NOx
@@ -674,7 +673,7 @@ action:
     message: "The PM10 level is {{ states(pm10_sensor) }}µg/m³ which is above the maximum of {{ max_pm10 }}µg/m³."
     data:
       notification_icon: "mdi:weather-fog"
-- alias: Max VOC Alert
+- alias: Max VOC Index Alert
   if:
   - condition: numeric_state
     entity_id: !input voc_sensor
@@ -683,8 +682,8 @@ action:
   - device_id: !input notify_device
     domain: mobile_app
     type: notify
-    title: "{{ area_name }} VOC Alert"
-    message: "The VOC level is {{ states(voc_sensor) }}ppb which is above the maximum of {{ max_voc }}ppb."
+    title: "{{ area_name }} VOC Index Alert"
+    message: "The VOC Index is {{ states(voc_sensor) }} which is above the maximum of {{ max_voc }}."
     data:
       notification_icon: "mdi:chemical-weapon"
 - alias: Max NOx Alert
