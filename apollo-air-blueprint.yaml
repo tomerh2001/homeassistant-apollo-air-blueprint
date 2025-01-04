@@ -1,5 +1,6 @@
 blueprint:
   name: Apollo Air Sensor Notification
+  author: tomerh2001
   description: >
     This blueprint monitors values from Apollo Air sensors and sends a notification if any values exceed the defined thresholds.
   domain: automation
