@@ -19,6 +19,14 @@ blueprint:
           integration: mobile_app
           multiple: false
 
+    apollo_air_device:
+      name: Apollo Air Device
+      description: "Select your Apollo Air device."
+      selector:
+        device:
+          integration: esphome
+          manufacturer: "ApolloAutomation"
+
     temperature_settings:
       name: Temperature
       icon: mdi:thermometer
