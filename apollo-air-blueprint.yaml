@@ -749,8 +749,8 @@ action:
   - device_id: !input notify_device
     domain: mobile_app
     type: notify
-    title: "{{ area_name }} CO Alert"
-    message: "The CO level is {{ states(carbon_monoxide_sensor) }}ppm which is above the maximum of {{ max_carbon_monoxide }}ppm."
+    title: "{{ area_name }} Carbon Monoxide Alert"
+    message: "The Carbon Monoxide level is {{ states(carbon_monoxide_sensor) }}ppm which is above the maximum of {{ max_carbon_monoxide }}ppm."
     data:
       notification_icon: "mdi:molecule-co"
 - alias: Max Ethanol Alert
