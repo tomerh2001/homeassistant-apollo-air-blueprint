@@ -440,28 +440,6 @@ blueprint:
               min: 0
               max: 50
 
-    aqi_settings:
-      name: Air Quality Index
-      icon: mdi:air-filter
-      collapsed: true
-      input:
-        aqi_sensor:
-          name: AQI Sensor
-          description: "Select the AQI sensor."
-          default: 'sensor.nonexistent_sensor'
-          selector:
-            entity:
-              integration: esphome
-              domain: sensor
-        max_aqi:
-          name: Maximum AQI
-          description: "Set the maximum acceptable Air Quality Index value."
-          default: 100
-          selector:
-            number:
-              min: 0
-              max: 500
-
 variables:
   area_name: !input area_name
   notify_device: !input notify_device
@@ -502,8 +480,6 @@ variables:
   max_methane: !input max_methane
   bluetooth_sensor: !input bluetooth_sensor
   max_bluetooth: !input max_bluetooth
-  aqi_sensor: !input aqi_sensor
-  max_aqi: !input max_aqi
 
 trigger:
 - platform: numeric_state
@@ -566,9 +542,6 @@ trigger:
 - platform: numeric_state
   entity_id: !input bluetooth_sensor
   above: !input max_bluetooth
-- platform: numeric_state
-  entity_id: !input aqi_sensor
-  above: !input max_aqi
 
 action:
 - alias: Max Temperature Alert
@@ -831,16 +804,3 @@ action:
     message: "There are {{ states(bluetooth_sensor) }} Bluetooth devices in range which is above the maximum of {{ max_bluetooth }}."
     data:
       notification_icon: "mdi:bluetooth"
-- alias: Max AQI Alert
-  if:
-  - condition: numeric_state
-    entity_id: !input aqi_sensor
-    above: !input max_aqi
-  then:
-  - device_id: !input notify_device
-    domain: mobile_app
-    type: notify
-    title: "{{ area_name }} Air Quality Index Alert"
-    message: "The Air Quality Index is {{ states(aqi_sensor) }} which is above the maximum of {{ max_aqi }}."
-    data:
-      notification_icon: "mdi:air-filter"
