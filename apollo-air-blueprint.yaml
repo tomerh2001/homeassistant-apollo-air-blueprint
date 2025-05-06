@@ -131,7 +131,7 @@ blueprint:
         max_pm25:
           name: Maximum PM2.5
           description: Set the maximum acceptable PM2.5 level (µg/m³).
-          default: 25
+          default: 10
           selector:
             number:
               min: 0.0
@@ -147,7 +147,7 @@ blueprint:
         max_pm4:
           name: Maximum PM4
           description: Set the maximum acceptable PM4 level (µg/m³).
-          default: 40
+          default: 10
           selector:
             number:
               min: 0.0
@@ -163,7 +163,7 @@ blueprint:
         max_pm10:
           name: Maximum PM10
           description: Set the maximum acceptable PM10 level (µg/m³).
-          default: 50
+          default: 10
           selector:
             number:
               min: 0.0
@@ -172,7 +172,7 @@ blueprint:
               step: 1.0
               mode: slider
     voc_settings:
-      name: VOC
+      name: VOC Index
       icon: mdi:chemical-weapon
       collapsed: true
       input:
