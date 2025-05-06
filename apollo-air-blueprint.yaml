@@ -19,13 +19,59 @@ blueprint:
             - domain: sensor
               device_class: temperature
           multiple: false
-    notify_device:
-      name: Notify Device
-      description: Select the device to send the notification to.
-      selector:
-        device:
-          integration: mobile_app
-          multiple: false
+    notify_settings:
+      name: Notification Settings
+      icon: mdi:phone
+      collapsed: false
+      input:
+        notify_device:
+          name: Notify Device
+          description: Select the device to send the notification to.
+          selector:
+            device:
+              integration: mobile_app
+              multiple: false
+        notify_interruption_level:
+          name: Interruption Level - iOS Only
+          description: >
+            On devices running iOS 15 and later, you can configure the interruption level for your notifications to ensure they are delivered according to your preferences.
+            Choose the desired interruption level from the dropdown list.
+            Critical and time-sensitive notifications must be turned ON within the Home Assistant App, and time-sensitive notifications must be allowed in your Focus settings.
+            For more information on interruption levels [Click Here](https://community.home-assistant.io/t/653754/192?u=blacky)
+          default: active
+          selector:
+            select:
+              mode: dropdown
+              options:
+                - label: Default
+                  value: "active"
+                - label: Critical Notifications
+                  value: "critical"
+                - label: Time Sensitive Notifications
+                  value: "time-sensitive"
+                - label: Quiet Notifications Without Waking Screen
+                  value: "passive"
+        notify_data:
+          name: Android Only Options (Optional)
+          description: >
+            **High Priority** notifications ensure that you receive important alerts immediately.
+            These notifications bypass normal delivery delays and are delivered instantly to your device.
+            **Sticky Notification** ensure that important alerts are not dismissed when selected. They remain on your notification screen until you actively clear or swipe them away, ensuring that critical information stays visible until addressed.
+            
+            **Notification Channel** allow you to easily organize different notification settings,
+            including notification sounds, vibrations, and other device-specific features.
+            If you choose this option, please enter your desired channel name below.
+          default: []
+          selector:
+            select:
+              multiple: true
+              options:
+                - label: High Priority
+                  value: "high_priority"
+                - label: Sticky Notification
+                  value: "sticky"
+                - label: Notification Channel
+                  value: "channel"
     temperature_settings:
       name: Temperature
       icon: mdi:thermometer
@@ -320,6 +366,8 @@ variables:
   entities: >-
     {{ device_entities(device_id) }}
   notify_device: !input notify_device
+  notify_interruption_level: !input notify_interruption_level
+  notify_data: !input notify_data
   temperature_sensor: >-
     {{ entities|select('is_state_attr', 'device_class', 'temperature')|select('search', 'sen55')|list|first }}
   min_temp: !input min_temp
@@ -371,6 +419,25 @@ variables:
   methane_sensor: >-
     {{ entities|select('search', 'methane')|list|first }}
   max_methane: !input max_methane
+
+# Notify device option data
+
+  device_message_data: >-
+    {% set message = namespace(data={}) %}
+    {% set push = namespace(data={}) %}
+    {% if notify_interruption_level in ['active', 'critical', 'time-sensitive', 'passive'] %}
+      {% set push.data = dict(push.data, **{ 'interruption-level': notify_interruption_level }) %}
+    {% endif %}
+    {% if push.data %}
+      {% set message.data = dict(message.data, **{ 'push': push.data }) %}
+    {% endif %}
+    {% if 'high_priority' in notify_data %}
+      {% set message.data = dict(message.data, **{ 'ttl': 0, 'priority': 'high' }) %}
+    {% endif %}
+    {% if 'sticky' in notify_data %}
+      {% set message.data = dict(message.data, **{ 'sticky': "true" }) %}
+    {% endif %}
+    {{ message.data }}
 
 trigger:
 - trigger: homeassistant
@@ -426,8 +493,7 @@ action:
     title: '{{ area_name(temperature_sensor) }} Temperature Alert'
     message: The temperature is {{ states(temperature_sensor) }}°C which is above
       the maximum of {{ max_temp }}°C.
-    data:
-      notification_icon: mdi:thermometer
+    data: "{{ device_message_data }}"
 - alias: Min Temperature Alert
   if:
   - condition: template
@@ -439,8 +505,7 @@ action:
     title: '{{ area_name(temperature_sensor) }} Temperature Alert'
     message: The temperature is {{ states(temperature_sensor) }}°C which is below
       the minimum of {{ min_temp }}°C.
-    data:
-      notification_icon: mdi:thermometer
+    data: "{{ device_message_data }}"
 - alias: Max Humidity Alert
   if:
   - condition: template
@@ -452,8 +517,7 @@ action:
     title: '{{ area_name(humidity_sensor) }} Humidity Alert'
     message: The humidity is {{ states(humidity_sensor) }}% which is above the maximum
       of {{ max_humidity }}%.
-    data:
-      notification_icon: mdi:water-percent
+    data: "{{ device_message_data }}"
 - alias: Min Humidity Alert
   if:
   - condition: template
@@ -465,8 +529,7 @@ action:
     title: '{{ area_name(humidity_sensor) }} Humidity Alert'
     message: The humidity is {{ states(humidity_sensor) }}% which is below the minimum
       of {{ min_humidity }}%.
-    data:
-      notification_icon: mdi:water-percent
+    data: "{{ device_message_data }}"
 - alias: Max Pressure Alert
   if:
   - condition: template
@@ -478,8 +541,7 @@ action:
     title: '{{ area_name(pressure_sensor) }} Pressure Alert'
     message: The pressure is {{ states(pressure_sensor) }}hPa which is above the maximum
       of {{ max_pressure }}hPa.
-    data:
-      notification_icon: mdi:gauge
+    data: "{{ device_message_data }}"
 - alias: Min Pressure Alert
   if:
   - condition: template
@@ -491,8 +553,7 @@ action:
     title: '{{ area_name(pressure_sensor) }} Pressure Alert'
     message: The pressure is {{ states(pressure_sensor) }}hPa which is below the minimum
       of {{ min_pressure }}hPa.
-    data:
-      notification_icon: mdi:gauge
+    data: "{{ device_message_data }}"
 - alias: Max PM1 Alert
   if:
   - condition: template
@@ -504,8 +565,7 @@ action:
     title: '{{ area_name(pm1_sensor)}} PM1 Alert'
     message: The PM1 level is {{ states(pm1_sensor) }}µg/m³ which is above the maximum
       of {{ max_pm1 }}µg/m³.
-    data:
-      notification_icon: mdi:weather-fog
+    data: "{{ device_message_data }}"
 - alias: Max PM2.5 Alert
   if:
   - condition: template
@@ -517,8 +577,7 @@ action:
     title: '{{ area_name(pm25_sensor) }} PM2.5 Alert'
     message: The PM2.5 level is {{ states(pm25_sensor) }}µg/m³ which is above the
       maximum of {{ max_pm25 }}µg/m³.
-    data:
-      notification_icon: mdi:weather-fog
+    data: "{{ device_message_data }}"
 - alias: Max PM4 Alert
   if:
   - condition: template
@@ -530,8 +589,7 @@ action:
     title: '{{ area_name(pm4_sensor) }} PM4 Alert'
     message: The PM4 level is {{ states(pm4_sensor) }}µg/m³ which is above the maximum
       of {{ max_pm4 }}µg/m³.
-    data:
-      notification_icon: mdi:weather-fog
+    data: "{{ device_message_data }}"
 - alias: Max PM10 Alert
   if:
   - condition: template
@@ -543,8 +601,7 @@ action:
     title: '{{ area_name(pm10_sensor) }} PM10 Alert'
     message: The PM10 level is {{ states(pm10_sensor) }}µg/m³ which is above the maximum
       of {{ max_pm10 }}µg/m³.
-    data:
-      notification_icon: mdi:weather-fog
+    data: "{{ device_message_data }}"
 - alias: Max VOC Index Alert
   if:
   - condition: template
@@ -556,8 +613,7 @@ action:
     title: '{{ area_name(voc_sensor) }} VOC Index Alert'
     message: The VOC Index is {{ states(voc_sensor) }} which is above the maximum
       of {{ max_voc }}.
-    data:
-      notification_icon: mdi:chemical-weapon
+    data: "{{ device_message_data }}"
 - alias: Max NOx Alert
   if:
   - condition: template
@@ -569,8 +625,7 @@ action:
     title: '{{ area_name(nox_sensor) }} NOx Alert'
     message: The NOx level is {{ states(nox_sensor) }}ppb which is above the maximum
       of {{ max_nox }}ppb.
-    data:
-      notification_icon: mdi:weather-lightning
+    data: "{{ device_message_data }}"
 - alias: Max CO2 Alert
   if:
   - condition: template
@@ -582,8 +637,7 @@ action:
     title: '{{ area_name(co2_sensor) }} CO2 Alert'
     message: The CO2 level is {{ states(co2_sensor) }}ppm which is above the maximum
       of {{ max_co2 }}ppm.
-    data:
-      notification_icon: mdi:molecule-co2
+    data: "{{ device_message_data }}"
 - alias: Max CO Alert
   if:
   - condition: template
@@ -595,8 +649,7 @@ action:
     title: '{{ area_name(carbon_monoxide_sensor) }} Carbon Monoxide Alert'
     message: The Carbon Monoxide level is {{ states(carbon_monoxide_sensor) }}ppm
       which is above the maximum of {{ max_carbon_monoxide }}ppm.
-    data:
-      notification_icon: mdi:molecule-co
+    data: "{{ device_message_data }}"
 - alias: Max Ethanol Alert
   if:
   - condition: template
@@ -608,8 +661,7 @@ action:
     title: '{{ area_name(ethanol_sensor) }} Ethanol Alert'
     message: The ethanol level is {{ states(ethanol_sensor) }}ppb which is above the
       maximum of {{ max_ethanol }}ppb.
-    data:
-      notification_icon: mdi:glass-wine
+    data: "{{ device_message_data }}"
 - alias: Max Hydrogen Alert
   if:
   - condition: template
@@ -621,8 +673,7 @@ action:
     title: '{{ area_name(hydrogen_sensor) }} Hydrogen Alert'
     message: The hydrogen level is {{ states(hydrogen_sensor) }}ppm which is above
       the maximum of {{ max_hydrogen }}ppm.
-    data:
-      notification_icon: mdi:gas-cylinder
+    data: "{{ device_message_data }}"
 - alias: Max NO2 Alert
   if:
   - condition: template
@@ -634,8 +685,7 @@ action:
     title: '{{ area_name(no2_sensor) }} NO2 Alert'
     message: The NO2 level is {{ states(no2_sensor) }}ppb which is above the maximum
       of {{ max_no2 }}ppb.
-    data:
-      notification_icon: mdi:gas-cylinder
+    data: "{{ device_message_data }}"
 - alias: Max Ammonia Alert
   if:
   - condition: template
@@ -647,8 +697,7 @@ action:
     title: '{{ area_name(ammonia_sensor) }} Ammonia Alert'
     message: The ammonia level is {{ states(ammonia_sensor) }}ppm which is above the
       maximum of {{ max_ammonia }}ppm.
-    data:
-      notification_icon: mdi:chemical-weapon
+    data: "{{ device_message_data }}"
 - alias: Max Methane Alert
   if:
   - condition: template
@@ -660,5 +709,4 @@ action:
     title: '{{ area_name(methane_sensor) }} Methane Alert'
     message: The methane level is {{ states(methane_sensor) }}ppm which is above the
       maximum of {{ max_methane }}ppm.
-    data:
-      notification_icon: mdi:chemical-weapon
+    data: "{{ device_message_data }}"
