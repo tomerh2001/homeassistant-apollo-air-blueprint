@@ -72,6 +72,39 @@ blueprint:
                   value: "sticky"
                 - label: Notification Channel
                   value: "channel"
+    timer_settings:
+      name: Notification Timing
+      description: Set a repeating time pattern to receive reminders for items that exceed your thresholds.
+      icon: mdi:clock-alert
+      collapsed: true
+      input:
+        time_hours:
+          name: Hours
+          default: 0
+          selector:
+            number:
+              min: 0
+              max: 24
+              step: 1.0
+              mode: slider
+        time_minutes:
+          name: Minutes
+          default: 0
+          selector:
+            number:
+              min: 0
+              max: 60
+              step: 1.0
+              mode: slider
+        time_seconds:
+          name: Seconds
+          default: 0
+          selector:
+            number:
+              min: 0
+              max: 60
+              step: 1.0
+              mode: slider
     temperature_settings:
       name: Temperature
       icon: mdi:thermometer
@@ -442,6 +475,10 @@ variables:
 trigger:
 - trigger: homeassistant
   event: start
+- trigger: time_pattern
+  hours: !input time_hours
+  minutes: !input time_minutes
+  seconds: !input time_seconds
 - trigger: template
   value_template: "{{ states(temperature_sensor)|float > max_temp }}"
 - trigger: template
