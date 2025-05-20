@@ -19,18 +19,18 @@ blueprint:
             - domain: sensor
               device_class: temperature
           multiple: false
-    notify_settings:
-      name: Notification Settings
-      icon: mdi:phone
-      collapsed: false
+    notify_device:
+      name: Notify Device
+      description: Select the device to send the notification to.
+      selector:
+        device:
+          integration: mobile_app
+          multiple: false
+    notify_options:
+      name: Notification Options
+      icon: mdi:information-box
+      collapsed: true
       input:
-        notify_device:
-          name: Notify Device
-          description: Select the device to send the notification to.
-          selector:
-            device:
-              integration: mobile_app
-              multiple: false
         notify_interruption_level:
           name: Interruption Level - iOS Only
           description: >
@@ -72,39 +72,46 @@ blueprint:
                   value: "sticky"
                 - label: Notification Channel
                   value: "channel"
-    timer_settings:
+    time_settings:
       name: Notification Timing
+      collapsed: true
       description: Set a repeating time pattern to receive reminders for items that exceed your thresholds.
       icon: mdi:clock-alert
-      collapsed: true
       input:
         time_hours:
           name: Hours
-          default: 1
+          default: "*"
           selector:
-            number:
-              min: 0
-              max: 24
-              step: 1.0
-              mode: slider
+            select:
+              mode: dropdown
+              options:
+                - label: "Every Hour"
+                  value: "*"
+                - label: "Every 2 Hours"
+                  value: "/2"
+                - label: "Every 4 Hours"
+                  value: "/4"
+                - label: "Every 6 Hours"
+                  value: "/6"
+                - label: "Every 12 Hours"
+                  value: "/12"
         time_minutes:
           name: Minutes
-          default: 0
+          default: "1"
           selector:
-            number:
-              min: 0
-              max: 60
-              step: 1.0
-              mode: slider
-        time_seconds:
-          name: Seconds
-          default: 0
-          selector:
-            number:
-              min: 0
-              max: 60
-              step: 1.0
-              mode: slider
+            select:
+              mode: dropdown
+              options:
+                - label: "Default"
+                  value: "1"
+                - label: "Every 5 Minutes"
+                  value: "/5"
+                - label: "Every 10 Minutes"
+                  value: "/10"
+                - label: "Every 15 Minutes"
+                  value: "/15"
+                - label: "Every 30 Minutes"
+                  value: "/30"
     temperature_settings:
       name: Temperature
       icon: mdi:thermometer
@@ -394,45 +401,48 @@ blueprint:
               step: 1.0
               mode: slider
 
-variables:
+trigger_variables:
+
+  # Master device and its entities
+
   device_id: !input device_id
   entities: >-
-    {{ device_entities(device_id) }}
-  notify_device: !input notify_device
-  notify_interruption_level: !input notify_interruption_level
-  notify_data: !input notify_data
+    {{ device_entities(device_id)|select('search', '^sensor.')|reject('search', 'esp') }}
+
+# Sensors and limits
+
   temperature_sensor: >-
-    {{ entities|select('is_state_attr', 'device_class', 'temperature')|select('search', 'sen55')|list|first }}
+    {{ entities|select('search', 'temperature')|list|first }}
   min_temp: !input min_temp
   max_temp: !input max_temp
   humidity_sensor: >-
-    {{ entities|select('is_state_attr', 'device_class', 'humidity')|select('search', 'sen55')|list|first }}
+    {{ entities|select('search', 'humidity')|list|first }}
   min_humidity: !input min_humidity
   max_humidity: !input max_humidity
   pressure_sensor: >-
-    {{ entities|select('is_state_attr', 'device_class', 'pressure')|select('search', 'dps310')|list|first }}
+    {{ entities|select('search', 'pressure')|list|first }}
   min_pressure: !input min_pressure
   max_pressure: !input max_pressure
   pm1_sensor: >-
-    {{ entities|select('is_state_attr', 'device_class', 'pm1')|list|first }}
+    {{ entities|select('search', 'pm_1_m')|list|first }}
   max_pm1: !input max_pm1
   pm25_sensor: >-
-    {{ entities|select('is_state_attr', 'device_class', 'pm1')|list|first }}
+    {{ entities|select('search', 'pm_2_5_m')|list|first }}
   max_pm25: !input max_pm25
   pm4_sensor: >-
-    {{ entities|select('is_state_attr', 'device_class', 'pm25')|list|first }}
+    {{ entities|select('search', 'pm_4_m')|list|first }}
   max_pm4: !input max_pm4
   pm10_sensor: >-
-    {{ entities|select('is_state_attr', 'device_class', 'pm10')|list|first }}
+    {{ entities|select('search', 'pm_10_m')|list|first }}
   max_pm10: !input max_pm10
   voc_sensor: >-
-    {{ entities|select('is_state_attr', 'device_class', 'aqi')|select('search', 'sen55_voc')|list|first }}
+    {{ entities|select('search', 'voc')|list|first }}
   max_voc: !input max_voc
   nox_sensor: >-
-    {{ entities|select('is_state_attr', 'device_class', 'aqi')|select('search', 'sen55_nox')|list|first }}
+    {{ entities|select('search', 'nox')|list|first }}
   max_nox: !input max_nox
   co2_sensor: >-
-    {{ entities|select('is_state_attr', 'device_class', 'carbon_dioxide')|list|first }}
+    {{ entities|select('search', 'co2')|list|first }}
   max_co2: !input max_co2
   carbon_monoxide_sensor: >-
     {{ entities|select('search', 'carbon_monoxide')|list|first }}
@@ -453,8 +463,11 @@ variables:
     {{ entities|select('search', 'methane')|list|first }}
   max_methane: !input max_methane
 
-# Notify device option data
+# Notification data
 
+  notify_device: !input notify_device
+  notify_interruption_level: !input notify_interruption_level
+  notify_data: !input notify_data
   device_message_data: >-
     {% set message = namespace(data={}) %}
     {% set push = namespace(data={}) %}
@@ -472,13 +485,12 @@ variables:
     {% endif %}
     {{ message.data }}
 
-trigger:
+triggers:
 - trigger: homeassistant
   event: start
 - trigger: time_pattern
   hours: !input time_hours
   minutes: !input time_minutes
-  seconds: !input time_seconds
 - trigger: template
   value_template: "{{ states(temperature_sensor)|float > max_temp }}"
 - trigger: template
