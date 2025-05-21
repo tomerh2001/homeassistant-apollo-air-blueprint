@@ -492,49 +492,49 @@ triggers:
   hours: !input time_hours
   minutes: !input time_minutes
 - trigger: template
-  value_template: "{{ states(temperature_sensor)|float > max_temp }}"
+  value_template: "{{ states(temperature_sensor)|float(0) > max_temp }}"
 - trigger: template
-  value_template: "{{ states(temperature_sensor)|float < min_temp }}"
+  value_template: "{{ states(temperature_sensor)|float(0) < min_temp }}"
 - trigger: template
-  value_template: "{{ states(humidity_sensor)|float > max_humidity }}"
+  value_template: "{{ states(humidity_sensor)|float(0) > max_humidity }}"
 - trigger: template
-  value_template: "{{ states(humidity_sensor)|float < min_humidity }}"
+  value_template: "{{ states(humidity_sensor)|float(0) < min_humidity }}"
 - trigger: template
-  value_template: "{{ states(pressure_sensor)|float > max_pressure }}"
+  value_template: "{{ states(pressure_sensor)|float(0) > max_pressure }}"
 - trigger: template
-  value_template: "{{ states(pressure_sensor)|float < min_pressure }}"
+  value_template: "{{ states(pressure_sensor)|float(0) < min_pressure }}"
 - trigger: template
-  value_template: "{{ states(pm1_sensor)|float > max_pm1 }}"
+  value_template: "{{ states(pm1_sensor)|float(0) > max_pm1 }}"
 - trigger: template
-  value_template: "{{ states(pm25_sensor)|float > max_pm25 }}"
+  value_template: "{{ states(pm25_sensor)|float(0) > max_pm25 }}"
 - trigger: template
-  value_template: "{{ states(pm4_sensor)|float > max_pm4 }}"
+  value_template: "{{ states(pm4_sensor)|float(0) > max_pm4 }}"
 - trigger: template
-  value_template: "{{ states(pm10_sensor)|float > max_pm10 }}"
+  value_template: "{{ states(pm10_sensor)|float(0) > max_pm10 }}"
 - trigger: template
-  value_template: "{{ states(voc_sensor)|float > max_voc }}"
+  value_template: "{{ states(voc_sensor)|float(0) > max_voc }}"
 - trigger: template
-  value_template: "{{ states(nox_sensor)|float > max_nox }}"
+  value_template: "{{ states(nox_sensor)|float(0) > max_nox }}"
 - trigger: template
-  value_template: "{{ states(co2_sensor)|float > max_co2 }}"
+  value_template: "{{ states(co2_sensor)|float(0) > max_co2 }}"
 - trigger: template
-  value_template: "{{ states(carbon_monoxide_sensor)|float > max_carbon_monoxide }}"
+  value_template: "{{ states(carbon_monoxide_sensor)|float(0) > max_carbon_monoxide }}"
 - trigger: template
-  value_template: "{{ states(ethanol_sensor)|float > max_ethanol }}"
+  value_template: "{{ states(ethanol_sensor)|float(0) > max_ethanol }}"
 - trigger: template
-  value_template: "{{ states(hydrogen_sensor)|float > max_hydrogen }}"
+  value_template: "{{ states(hydrogen_sensor)|float(0) > max_hydrogen }}"
 - trigger: template
-  value_template: "{{ states(no2_sensor)|float > max_no2 }}"
+  value_template: "{{ states(no2_sensor)|float(0) > max_no2 }}"
 - trigger: template
-  value_template: "{{ states(ammonia_sensor)|float > max_ammonia }}"
+  value_template: "{{ states(ammonia_sensor)|float(0) > max_ammonia }}"
 - trigger: template
-  value_template: "{{ states(methane_sensor)|float > max_methane }}"
+  value_template: "{{ states(methane_sensor)|float(0) > max_methane }}"
 
 action:
 - alias: Max Temperature Alert
   if:
   - condition: template
-    value_template: "{{ states(temperature_sensor)|float > max_temp }}"
+    value_template: "{{ states(temperature_sensor)|float(0) > max_temp }}"
   then:
   - device_id: !input notify_device
     domain: mobile_app
@@ -546,7 +546,7 @@ action:
 - alias: Min Temperature Alert
   if:
   - condition: template
-    value_template: "{{ states(temperature_sensor)|float < min_temp }}"
+    value_template: "{{ states(temperature_sensor)|float(0) < min_temp }}"
   then:
   - device_id: !input notify_device
     domain: mobile_app
@@ -558,7 +558,7 @@ action:
 - alias: Max Humidity Alert
   if:
   - condition: template
-    value_template: "{{ states(humidity_sensor)|float > max_humidity }}"
+    value_template: "{{ states(humidity_sensor)|float(0) > max_humidity }}"
   then:
   - device_id: !input notify_device
     domain: mobile_app
@@ -570,7 +570,7 @@ action:
 - alias: Min Humidity Alert
   if:
   - condition: template
-    value_template: "{{ states(humidity_sensor)|float < min_humidity }}"
+    value_template: "{{ states(humidity_sensor)|float(0) < min_humidity }}"
   then:
   - device_id: !input notify_device
     domain: mobile_app
@@ -582,7 +582,7 @@ action:
 - alias: Max Pressure Alert
   if:
   - condition: template
-    value_template: "{{ states(pressure_sensor)|float > max_pressure }}"
+    value_template: "{{ states(pressure_sensor)|float(0) > max_pressure }}"
   then:
   - device_id: !input notify_device
     domain: mobile_app
@@ -594,7 +594,7 @@ action:
 - alias: Min Pressure Alert
   if:
   - condition: template
-    value_template: "{{ states(pressure_sensor)|float < min_pressure }}"
+    value_template: "{{ states(pressure_sensor)|float(0) < min_pressure }}"
   then:
   - device_id: !input notify_device
     domain: mobile_app
@@ -606,7 +606,7 @@ action:
 - alias: Max PM1 Alert
   if:
   - condition: template
-    value_template: "{{ states(pm1_sensor)|float > max_pm1 }}"
+    value_template: "{{ states(pm1_sensor)|float(0) > max_pm1 }}"
   then:
   - device_id: !input notify_device
     domain: mobile_app
@@ -618,7 +618,7 @@ action:
 - alias: Max PM2.5 Alert
   if:
   - condition: template
-    value_template: "{{ states(pm25_sensor)|float > max_pm25 }}"
+    value_template: "{{ states(pm25_sensor)|float(0) > max_pm25 }}"
   then:
   - device_id: !input notify_device
     domain: mobile_app
@@ -630,7 +630,7 @@ action:
 - alias: Max PM4 Alert
   if:
   - condition: template
-    value_template: "{{ states(pm4_sensor)|float > max_pm4 }}"
+    value_template: "{{ states(pm4_sensor)|float(0) > max_pm4 }}"
   then:
   - device_id: !input notify_device
     domain: mobile_app
@@ -642,7 +642,7 @@ action:
 - alias: Max PM10 Alert
   if:
   - condition: template
-    value_template: "{{ states(pm10_sensor)|float > max_pm10 }}"
+    value_template: "{{ states(pm10_sensor)|float(0) > max_pm10 }}"
   then:
   - device_id: !input notify_device
     domain: mobile_app
@@ -654,7 +654,7 @@ action:
 - alias: Max VOC Index Alert
   if:
   - condition: template
-    value_template: "{{ states(voc_sensor)|float > max_voc }}"
+    value_template: "{{ states(voc_sensor)|float(0) > max_voc }}"
   then:
   - device_id: !input notify_device
     domain: mobile_app
@@ -666,7 +666,7 @@ action:
 - alias: Max NOx Alert
   if:
   - condition: template
-    value_template: "{{ states(nox_sensor)|float > max_nox }}"
+    value_template: "{{ states(nox_sensor)|float(0) > max_nox }}"
   then:
   - device_id: !input notify_device
     domain: mobile_app
@@ -678,7 +678,7 @@ action:
 - alias: Max CO2 Alert
   if:
   - condition: template
-    value_template: "{{ states(co2_sensor)|float > max_co2 }}"
+    value_template: "{{ states(co2_sensor)|float(0) > max_co2 }}"
   then:
   - device_id: !input notify_device
     domain: mobile_app
@@ -690,7 +690,7 @@ action:
 - alias: Max CO Alert
   if:
   - condition: template
-    value_template: "{{ states(carbon_monoxide_sensor)|float > max_carbon_monoxide }}"
+    value_template: "{{ states(carbon_monoxide_sensor)|float(0) > max_carbon_monoxide }}"
   then:
   - device_id: !input notify_device
     domain: mobile_app
@@ -702,7 +702,7 @@ action:
 - alias: Max Ethanol Alert
   if:
   - condition: template
-    value_template: "{{ states(ethanol_sensor)|float > max_ethanol }}"
+    value_template: "{{ states(ethanol_sensor)|float(0) > max_ethanol }}"
   then:
   - device_id: !input notify_device
     domain: mobile_app
@@ -714,7 +714,7 @@ action:
 - alias: Max Hydrogen Alert
   if:
   - condition: template
-    value_template: "{{ states(hydrogen_sensor)|float > max_hydrogen }}"
+    value_template: "{{ states(hydrogen_sensor)|float(0) > max_hydrogen }}"
   then:
   - device_id: !input notify_device
     domain: mobile_app
@@ -726,7 +726,7 @@ action:
 - alias: Max NO2 Alert
   if:
   - condition: template
-    value_template: "{{ states(no2_sensor)|float > max_no2 }}"
+    value_template: "{{ states(no2_sensor)|float(0) > max_no2 }}"
   then:
   - device_id: !input notify_device
     domain: mobile_app
@@ -738,7 +738,7 @@ action:
 - alias: Max Ammonia Alert
   if:
   - condition: template
-    value_template: "{{ states(ammonia_sensor)|float > max_ammonia }}"
+    value_template: "{{ states(ammonia_sensor)|float(0) > max_ammonia }}"
   then:
   - device_id: !input notify_device
     domain: mobile_app
@@ -750,7 +750,7 @@ action:
 - alias: Max Methane Alert
   if:
   - condition: template
-    value_template: "{{ states(methane_sensor)|float > max_methane }}"
+    value_template: "{{ states(methane_sensor)|float(0) > max_methane }}"
   then:
   - device_id: !input notify_device
     domain: mobile_app
