@@ -407,7 +407,7 @@ trigger_variables:
 
   device_id: !input device_id
   entities: >-
-    {{ device_entities(device_id)|select('search', '^sensor.')|reject('search', 'esp') }}
+    {{ device_entities(device_id)|select('search', '^sensor.')|reject('search', 'esp')|list }}
 
 # Sensors and limits
 
