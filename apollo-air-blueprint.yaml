@@ -119,24 +119,20 @@ blueprint:
       input:
         min_temp:
           name: Minimum Temperature
-          description: Set the minimum acceptable temperature (°C).
-          default: 15
+          description: Set the minimum acceptable temperature.
           selector:
             number:
-              min: -10.0
-              max: 50.0
-              unit_of_measurement: °C
+              min: -50.0
+              max: 150.0
               step: 1.0
               mode: slider
         max_temp:
           name: Maximum Temperature
-          description: Set the maximum acceptable temperature (°C).
-          default: 30
+          description: Set the maximum acceptable temperature.
           selector:
             number:
-              min: -10.0
-              max: 50.0
-              unit_of_measurement: °C
+              min: -50.0
+              max: 150.0
               step: 1.0
               mode: slider
     humidity_settings:
