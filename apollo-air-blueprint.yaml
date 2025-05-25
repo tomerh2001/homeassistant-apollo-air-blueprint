@@ -166,33 +166,6 @@ blueprint:
               unit_of_measurement: '%'
               step: 1.0
               mode: slider
-    pressure_settings:
-      name: Pressure
-      icon: mdi:gauge
-      collapsed: true
-      input:
-        min_pressure:
-          name: Minimum Pressure
-          description: Set the minimum acceptable pressure (hPa).
-          default: 980
-          selector:
-            number:
-              min: 800.0
-              max: 1200.0
-              unit_of_measurement: hPa
-              step: 1.0
-              mode: slider
-        max_pressure:
-          name: Maximum Pressure
-          description: Set the maximum acceptable pressure (hPa).
-          default: 1050
-          selector:
-            number:
-              min: 800.0
-              max: 1200.0
-              unit_of_measurement: hPa
-              step: 1.0
-              mode: slider
     pm1_settings:
       name: PM1
       icon: mdi:weather-fog
@@ -419,10 +392,6 @@ trigger_variables:
     {{ entities|select('search', 'humidity')|list|first }}
   min_humidity: !input min_humidity
   max_humidity: !input max_humidity
-  pressure_sensor: >-
-    {{ entities|select('search', 'pressure')|list|first }}
-  min_pressure: !input min_pressure
-  max_pressure: !input max_pressure
   pm1_sensor: >-
     {{ entities|select('search', 'pm_1_m')|list|first }}
   max_pm1: !input max_pm1
@@ -500,10 +469,6 @@ triggers:
 - trigger: template
   value_template: "{{ states(humidity_sensor)|float(0) < min_humidity }}"
 - trigger: template
-  value_template: "{{ states(pressure_sensor)|float(0) > max_pressure }}"
-- trigger: template
-  value_template: "{{ states(pressure_sensor)|float(0) < min_pressure }}"
-- trigger: template
   value_template: "{{ states(pm1_sensor)|float(0) > max_pm1 }}"
 - trigger: template
   value_template: "{{ states(pm25_sensor)|float(0) > max_pm25 }}"
@@ -578,30 +543,6 @@ action:
     title: '{{ area_name(humidity_sensor) }} Humidity Alert'
     message: The humidity is {{ states(humidity_sensor) }}% which is below the minimum
       of {{ min_humidity }}%.
-    data: "{{ device_message_data }}"
-- alias: Max Pressure Alert
-  if:
-  - condition: template
-    value_template: "{{ states(pressure_sensor)|float(0) > max_pressure }}"
-  then:
-  - device_id: !input notify_device
-    domain: mobile_app
-    type: notify
-    title: '{{ area_name(pressure_sensor) }} Pressure Alert'
-    message: The pressure is {{ states(pressure_sensor) }}hPa which is above the maximum
-      of {{ max_pressure }}hPa.
-    data: "{{ device_message_data }}"
-- alias: Min Pressure Alert
-  if:
-  - condition: template
-    value_template: "{{ states(pressure_sensor)|float(0) < min_pressure }}"
-  then:
-  - device_id: !input notify_device
-    domain: mobile_app
-    type: notify
-    title: '{{ area_name(pressure_sensor) }} Pressure Alert'
-    message: The pressure is {{ states(pressure_sensor) }}hPa which is below the minimum
-      of {{ min_pressure }}hPa.
     data: "{{ device_message_data }}"
 - alias: Max PM1 Alert
   if:
