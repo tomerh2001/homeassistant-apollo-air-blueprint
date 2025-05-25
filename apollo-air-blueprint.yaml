@@ -501,8 +501,8 @@ action:
     domain: mobile_app
     type: notify
     title: '{{ area_name(temperature_sensor) }} Temperature Alert'
-    message: The temperature is {{ states(temperature_sensor) }}°C which is above
-      the maximum of {{ max_temp }}°C.
+    message: The temperature is {{ states(temperature_sensor) }}{{ state_attr(temperature_sensor, "unit_of_measurement") }} which is above
+      the maximum of {{ max_temp }}{{ state_attr(temperature_sensor, "unit_of_measurement") }}.
     data: "{{ device_message_data }}"
 - alias: Min Temperature Alert
   if:
@@ -513,8 +513,8 @@ action:
     domain: mobile_app
     type: notify
     title: '{{ area_name(temperature_sensor) }} Temperature Alert'
-    message: The temperature is {{ states(temperature_sensor) }}°C which is below
-      the minimum of {{ min_temp }}°C.
+    message: The temperature is {{ states(temperature_sensor) }}{{ state_attr(temperature_sensor, "unit_of_measurement") }} which is below
+      the minimum of {{ min_temp }}{{ state_attr(temperature_sensor, "unit_of_measurement") }}.
     data: "{{ device_message_data }}"
 - alias: Max Humidity Alert
   if:
