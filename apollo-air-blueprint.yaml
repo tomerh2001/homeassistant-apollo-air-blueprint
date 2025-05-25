@@ -114,12 +114,13 @@ blueprint:
                   value: "/30"
     temperature_settings:
       name: Temperature
-      icon: mdi:thermometer
       collapsed: true
+      icon: mdi:thermometer
       input:
         min_temp:
           name: Minimum Temperature
           description: Set the minimum acceptable temperature.
+          default: 0
           selector:
             number:
               min: -50.0
@@ -129,6 +130,7 @@ blueprint:
         max_temp:
           name: Maximum Temperature
           description: Set the maximum acceptable temperature.
+          default: 100
           selector:
             number:
               min: -50.0
@@ -451,51 +453,67 @@ trigger_variables:
     {{ message.data }}
 
 triggers:
-- trigger: homeassistant
-  event: start
 - trigger: time_pattern
   hours: !input time_hours
   minutes: !input time_minutes
+  id: time
 - trigger: template
   value_template: "{{ states(temperature_sensor)|float(0) > max_temp }}"
+  id: temperature_max
 - trigger: template
   value_template: "{{ states(temperature_sensor)|float(0) < min_temp }}"
+  id: temperature_min
 - trigger: template
   value_template: "{{ states(humidity_sensor)|float(0) > max_humidity }}"
+  id: humidity_max
 - trigger: template
   value_template: "{{ states(humidity_sensor)|float(0) < min_humidity }}"
+  id: humidity_min
 - trigger: template
   value_template: "{{ states(pm1_sensor)|float(0) > max_pm1 }}"
+  id: pm1
 - trigger: template
   value_template: "{{ states(pm25_sensor)|float(0) > max_pm25 }}"
+  id: pm25
 - trigger: template
   value_template: "{{ states(pm4_sensor)|float(0) > max_pm4 }}"
+  id: pm4
 - trigger: template
   value_template: "{{ states(pm10_sensor)|float(0) > max_pm10 }}"
+  id: pm10
 - trigger: template
   value_template: "{{ states(voc_sensor)|float(0) > max_voc }}"
+  id: voc
 - trigger: template
   value_template: "{{ states(nox_sensor)|float(0) > max_nox }}"
+  id: nox
 - trigger: template
   value_template: "{{ states(co2_sensor)|float(0) > max_co2 }}"
+  id: co2
 - trigger: template
   value_template: "{{ states(carbon_monoxide_sensor)|float(0) > max_carbon_monoxide }}"
+  id: co1
 - trigger: template
   value_template: "{{ states(ethanol_sensor)|float(0) > max_ethanol }}"
+  id: ethanol
 - trigger: template
   value_template: "{{ states(hydrogen_sensor)|float(0) > max_hydrogen }}"
+  id: hydrogen
 - trigger: template
   value_template: "{{ states(no2_sensor)|float(0) > max_no2 }}"
+  id: no2
 - trigger: template
   value_template: "{{ states(ammonia_sensor)|float(0) > max_ammonia }}"
+  id: ammonia
 - trigger: template
   value_template: "{{ states(methane_sensor)|float(0) > max_methane }}"
+  id: methane
 
 action:
 - alias: Max Temperature Alert
   if:
   - condition: template
-    value_template: "{{ states(temperature_sensor)|float(0) > max_temp }}"
+    value_template: "{{ states(temperature_sensor)|float(0) > max_temp and trigger.id in ['time', 'temperature_max'] }}"
   then:
   - device_id: !input notify_device
     domain: mobile_app
@@ -507,7 +525,7 @@ action:
 - alias: Min Temperature Alert
   if:
   - condition: template
-    value_template: "{{ states(temperature_sensor)|float(0) < min_temp }}"
+    value_template: "{{ states(temperature_sensor)|float(0) < min_temp and trigger.id in ['time', 'temperature_min'] }}"
   then:
   - device_id: !input notify_device
     domain: mobile_app
@@ -519,7 +537,7 @@ action:
 - alias: Max Humidity Alert
   if:
   - condition: template
-    value_template: "{{ states(humidity_sensor)|float(0) > max_humidity }}"
+    value_template: "{{ states(humidity_sensor)|float(0) > max_humidity and trigger.id in ['time', 'humidity_max'] }}"
   then:
   - device_id: !input notify_device
     domain: mobile_app
@@ -531,7 +549,7 @@ action:
 - alias: Min Humidity Alert
   if:
   - condition: template
-    value_template: "{{ states(humidity_sensor)|float(0) < min_humidity }}"
+    value_template: "{{ states(humidity_sensor)|float(0) < min_humidity and trigger.id in ['time', 'humidity_min'] }}"
   then:
   - device_id: !input notify_device
     domain: mobile_app
@@ -543,7 +561,7 @@ action:
 - alias: Max PM1 Alert
   if:
   - condition: template
-    value_template: "{{ states(pm1_sensor)|float(0) > max_pm1 }}"
+    value_template: "{{ states(pm1_sensor)|float(0) > max_pm1 and trigger.id in ['time', 'pm1'] }}"
   then:
   - device_id: !input notify_device
     domain: mobile_app
@@ -555,7 +573,7 @@ action:
 - alias: Max PM2.5 Alert
   if:
   - condition: template
-    value_template: "{{ states(pm25_sensor)|float(0) > max_pm25 }}"
+    value_template: "{{ states(pm25_sensor)|float(0) > max_pm25 and trigger.id in ['time', 'pm25'] }}"
   then:
   - device_id: !input notify_device
     domain: mobile_app
@@ -567,7 +585,7 @@ action:
 - alias: Max PM4 Alert
   if:
   - condition: template
-    value_template: "{{ states(pm4_sensor)|float(0) > max_pm4 }}"
+    value_template: "{{ states(pm4_sensor)|float(0) > max_pm4 and trigger.id in ['time', 'pm4'] }}"
   then:
   - device_id: !input notify_device
     domain: mobile_app
@@ -579,7 +597,7 @@ action:
 - alias: Max PM10 Alert
   if:
   - condition: template
-    value_template: "{{ states(pm10_sensor)|float(0) > max_pm10 }}"
+    value_template: "{{ states(pm10_sensor)|float(0) > max_pm10 and trigger.id in ['time', 'pm10'] }}"
   then:
   - device_id: !input notify_device
     domain: mobile_app
@@ -591,7 +609,7 @@ action:
 - alias: Max VOC Index Alert
   if:
   - condition: template
-    value_template: "{{ states(voc_sensor)|float(0) > max_voc }}"
+    value_template: "{{ states(voc_sensor)|float(0) > max_voc and trigger.id in ['time', 'voc'] }}"
   then:
   - device_id: !input notify_device
     domain: mobile_app
@@ -603,7 +621,7 @@ action:
 - alias: Max NOx Alert
   if:
   - condition: template
-    value_template: "{{ states(nox_sensor)|float(0) > max_nox }}"
+    value_template: "{{ states(nox_sensor)|float(0) > max_nox and trigger.id in ['time', 'nox'] }}"
   then:
   - device_id: !input notify_device
     domain: mobile_app
@@ -615,7 +633,7 @@ action:
 - alias: Max CO2 Alert
   if:
   - condition: template
-    value_template: "{{ states(co2_sensor)|float(0) > max_co2 }}"
+    value_template: "{{ states(co2_sensor)|float(0) > max_co2 and trigger.id in ['time', 'co2'] }}"
   then:
   - device_id: !input notify_device
     domain: mobile_app
@@ -627,7 +645,7 @@ action:
 - alias: Max CO Alert
   if:
   - condition: template
-    value_template: "{{ states(carbon_monoxide_sensor)|float(0) > max_carbon_monoxide }}"
+    value_template: "{{ states(carbon_monoxide_sensor)|float(0) > max_carbon_monoxide and trigger.id in ['time', 'co1'] }}"
   then:
   - device_id: !input notify_device
     domain: mobile_app
@@ -639,7 +657,7 @@ action:
 - alias: Max Ethanol Alert
   if:
   - condition: template
-    value_template: "{{ states(ethanol_sensor)|float(0) > max_ethanol }}"
+    value_template: "{{ states(ethanol_sensor)|float(0) > max_ethanol and trigger.id in ['time', 'ethanol'] }}"
   then:
   - device_id: !input notify_device
     domain: mobile_app
@@ -651,7 +669,7 @@ action:
 - alias: Max Hydrogen Alert
   if:
   - condition: template
-    value_template: "{{ states(hydrogen_sensor)|float(0) > max_hydrogen }}"
+    value_template: "{{ states(hydrogen_sensor)|float(0) > max_hydrogen and trigger.id in ['time', 'hydrogen'] }}"
   then:
   - device_id: !input notify_device
     domain: mobile_app
@@ -663,7 +681,7 @@ action:
 - alias: Max NO2 Alert
   if:
   - condition: template
-    value_template: "{{ states(no2_sensor)|float(0) > max_no2 }}"
+    value_template: "{{ states(no2_sensor)|float(0) > max_no2 and trigger.id in ['time', 'no2'] }}"
   then:
   - device_id: !input notify_device
     domain: mobile_app
@@ -675,7 +693,7 @@ action:
 - alias: Max Ammonia Alert
   if:
   - condition: template
-    value_template: "{{ states(ammonia_sensor)|float(0) > max_ammonia }}"
+    value_template: "{{ states(ammonia_sensor)|float(0) > max_ammonia and trigger.id in ['time', 'ammonia'] }}"
   then:
   - device_id: !input notify_device
     domain: mobile_app
@@ -687,7 +705,7 @@ action:
 - alias: Max Methane Alert
   if:
   - condition: template
-    value_template: "{{ states(methane_sensor)|float(0) > max_methane }}"
+    value_template: "{{ states(methane_sensor)|float(0) > max_methane and trigger.id in ['time', 'methane'] }}"
   then:
   - device_id: !input notify_device
     domain: mobile_app
