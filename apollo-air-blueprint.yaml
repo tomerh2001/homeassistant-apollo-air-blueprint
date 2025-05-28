@@ -511,7 +511,7 @@ triggers:
 
 conditions:
 - condition: template
-  value_template: "{{ states(temperature_sensor) not in ['unavailable'] }}"
+  value_template: "{{ states(temperature_sensor) not in ['unavailable', 'unknown'] }}"
 
 action:
 - alias: Max Temperature Alert
