@@ -509,6 +509,10 @@ triggers:
   value_template: "{{ states(methane_sensor)|float(0) > max_methane }}"
   id: methane
 
+conditions:
+- condition: template
+  value_template: "{{ states(temperature_sensor) not in ['unavailable'] }}"
+
 action:
 - alias: Max Temperature Alert
   if:
